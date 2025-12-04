@@ -39,107 +39,35 @@ function valorTotalEstoque(produtos) {
 console.log("\n=== EXERCÍCIO 3 ===");
 console.log(`Valor total: R$ ${valorTotalEstoque(produtos).toFixed(2)}`);
 
-function aplicarDescontos(produtos) {
-    return produtos.map(produto => ({
-        ...produto,
-        precoFinal: produto.preco - (produto.preco * produto.desconto / 100)
-    }));
+function aplicarDescontos(produtos)  {
+    return produtos.reduce((total, produto) => total * produto.estoque *  produto.preço);
+
 }
 
-// Testes:
+//teste
+console.logA("\n=== EXERCÍCIO 3 ===");
+const total = valorTotalEstoque(produtos);
+console.log(`Valor total do estoque: R$ ${total.toFixed(2)}`);
+
+
+
+const aplicarDescontos = (produtos) => {
+    return produtos.map(p => ({
+       ...p,
+         precoFinal: p.preco - (p.preco * (p.desconto / 100))
+    }))
+}
+
+
+
 console.log("\n=== EXERCÍCIO 4 ===");
 const comDescontos = aplicarDescontos(produtos);
-console.log(`Preço com desconto do item 2: R$ ${comDescontos[1].precoFinal}`);
+console.log("Produtos com preços finais aplicados:");
+comDescontos
+.filter(p => p.desconto > 0)
+.forEach(p => {
+    console.log(`- ${p.nome}: R$ ${p.precoFinal.toFixed(2)} (Desconto: ${p.desconto}%)`);
+});
 
-function produtoMaisCaro(produtos) {
-    return produtos.reduce((max, produto) => {
-        return (produto.preco > max.preco) ? produto : max;
-    }, produtos[0]);
-}
+     
 
-// Testes:
-console.log("\n=== EXERCÍCIO 5 ===");
-const maisCaro = produtoMaisCaro(produtos);
-console.log(`Mais caro: ${maisCaro.nome} (R$ ${maisCaro.preco})`);
-
-function listarNomes(produtos) {
-    return produtos.map(produto => produto.nome);
-}
-
-// Testes:
-console.log("\n=== EXERCÍCIO 6 ===");
-console.log(listarNomes(produtos));
-
-function produtosCarosDisponiveis(produtos) {
-    return produtos.filter(p => p.preco > 300 && p.estoque > 0);
-}
-
-// Testes:
-console.log("\n=== EXERCÍCIO 7 ===");
-console.log(`Qtd encontrada: ${produtosCarosDisponiveis(produtos).length}`);
-
-function mediaPrecoPorCategoria(produtos) {
-    const categoriasUnicas = [...new Set(produtos.map(p => p.categoria))];
-
-    return categoriasUnicas.reduce((acc, categoria) => {
-        const prodsCategoria = produtos.filter(p => p.categoria === categoria);
-        const soma = prodsCategoria.reduce((s, p) => s + p.preco, 0);
-        acc[categoria] = soma / prodsCategoria.length;
-        return acc;
-    }, {});
-}
-
-// Testes:
-console.log("\n=== EXERCÍCIO 8 ===");
-console.log(mediaPrecoPorCategoria(produtos));
-
-function top3MaisCaros(produtos) {
-    return [...produtos]
-        .sort((a, b) => b.preco - a.preco)
-        .slice(0, 3);
-}
-
-// Testes:
-console.log("\n=== EXERCÍCIO 9 ===");
-top3MaisCaros(produtos).forEach(p => console.log(p.nome));
-
-function estatisticasEstoque(produtos) {
-    const emEstoque = produtos.filter(p => p.estoque > 0);
-    return {
-        totalProdutos: produtos.length,
-        totalEmEstoque: emEstoque.length,
-        totalEmFalta: produtos.filter(p => p.estoque === 0).length,
-        valorTotal: produtos.reduce((acc, p) => acc + (p.preco * p.estoque), 0),
-        precoMedio: produtos.reduce((acc, p) => acc + p.preco, 0) / produtos.length,
-        produtoMaisCaro: produtos.reduce((a, b) => a.preco > b.preco ? a : b),
-        produtoMaisBarato: produtos.reduce((a, b) => a.preco < b.preco ? a : b),
-        categorias: [...new Set(produtos.map(p => p.categoria))]
-    };
-}
-
-// Testes:
-console.log("\n=== EXERCÍCIO 10 ===");
-console.log(estatisticasEstoque(produtos));
-
-function buscarProduto(produtos, termo) {
-    return produtos.filter(p =>
-        p.nome.toLowerCase().includes(termo.toLowerCase())
-    );
-}
-
-// Testes:
-console.log("\n=== EXERCÍCIO 11 ===");
-console.log(buscarProduto(produtos, "gamer").map(p => p.nome));
-
-function agruparPorCategoria(produtos) {
-    return produtos.reduce((acc, produto) => {
-        const cat = produto.categoria;
-        if (!acc[cat]) acc[cat] = [];
-        acc[cat].push(produto);
-        return acc;
-    }, {});
-}
-
-// Testes:
-console.log("\n=== EXERCÍCIO 12 ===");
-console.log(agruparPorCategoria(produtos));
